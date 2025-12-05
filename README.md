@@ -1,10 +1,10 @@
 # **Full-Stack Project Proposal (Updated as per Instructor Requirements)**  
-## **Project Title:** QuickBite – Online Food Delivery Platform  
+## **Project Title:** FoodiBuddy – Online Food Delivery Platform  
 
 ---
 
 ## **1. Project Overview**  
-QuickBite is a full-stack food delivery platform where users can browse restaurants, explore menus, place orders, and track delivery status in real time. The application demonstrates full CRUD operations (POST, GET, PUT, DELETE) for all major entities except authentication APIs. It also includes a structured backend router system, dynamic frontend data fetching, search, filtering, sorting, and pagination.
+FoodiBuddy is a full-stack food delivery platform where users can browse restaurants, explore menus, place orders, and track delivery status in real time. The application demonstrates full CRUD operations (POST, GET, PUT, DELETE) for all major entities except authentication APIs. It also includes a structured backend router system, dynamic frontend data fetching, search, filtering, sorting, and pagination.
 
 ---
 
@@ -62,4 +62,3 @@ QuickBite is a full-stack food delivery platform where users can browse restaura
 - `GET /menus/:restaurantId`  
 - `PUT /menus/:id`  
 - `DELETE /menus/:id`  
-
