@@ -1,10 +1,10 @@
 # **Full-Stack Project Proposal **  
-## **Project Title:** FoodiBuddy – Online Food Delivery Platform  
+## **Project Title:** FoodieBuddy – Online Food Delivery Platform  
 
 ---
 
 ## **1. Project Overview**  
-FoodiBuddy is a full-stack food delivery platform where users can browse restaurants, explore menus, place orders, and track delivery status in real time. The application demonstrates full CRUD operations (POST, GET, PUT, DELETE) for all major entities except authentication APIs. It also includes a structured backend router system, dynamic frontend data fetching, search, filtering, sorting, and pagination.
+FoodieBuddy is a full-stack food delivery platform where users can browse restaurants, explore menus, place orders, and track delivery status in real time. The application demonstrates full CRUD operations (POST, GET, PUT, DELETE) for all major entities except authentication APIs. It also includes a structured backend router system, dynamic frontend data fetching, search, filtering, sorting, and pagination.
 
 ---
 
