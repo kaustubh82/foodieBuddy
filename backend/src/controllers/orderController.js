@@ -32,7 +32,9 @@ exports.createOrder = async (req, res) => {
                 restaurantId,
                 totalAmount,
                 status: 'PENDING',
-                items: orderItemsData
+                items: {
+                    create: orderItemsData
+                }
             }
         });
 
@@ -64,7 +66,8 @@ exports.getOrders = async (req, res) => {
             where,
             include: {
                 user: { select: { name: true, email: true, address: true, phone: true } },
-                restaurant: { select: { name: true } }
+                restaurant: { select: { name: true } },
+                items: true
             },
             orderBy: { createdAt: 'desc' }
         });

@@ -100,7 +100,7 @@ const AdminDashboard = () => {
     ];
 
     return (
-        <div className="min-h-screen bg-gray-50 py-8">
+        <div className="min-h-screen bg-gray-50 text-gray-900 py-8">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
                 <h1 className="text-3xl font-bold mb-8">Admin Dashboard</h1>
 
@@ -488,14 +488,79 @@ const OrdersTab = ({ orders, onDelete, onUpdateStatus }) => {
             <div className="flex justify-between items-center mb-4">
                 <h2 className="text-xl font-semibold">Orders ({orders.length})</h2>
             </div>
-            <div className="space-y-4">
+
+            {/* Desktop Table View */}
+            <div className="hidden md:block overflow-x-auto">
+                <table className="min-w-full divide-y divide-gray-200">
+                    <thead className="bg-gray-50">
+                        <tr>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Order ID</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Customer</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Restaurant</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Date</th>
+                            <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody className="bg-white divide-y divide-gray-200">
+                        {orders.map((order) => (
+                            <tr key={order.id}>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    #{order.id.slice(0, 8)}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <div className="text-sm font-medium text-gray-900">{order.user?.name || 'Unknown'}</div>
+                                    <div className="text-sm text-gray-500">{order.user?.email}</div>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-900">
+                                    {order.restaurant?.name || 'Unknown'}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                    ₹{order.totalAmount}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <select
+                                        value={order.status}
+                                        onChange={(e) => onUpdateStatus(order.id, e.target.value)}
+                                        className={`text-xs font-semibold rounded-full px-2 py-1 border-0 ${order.status === 'DELIVERED' ? 'bg-green-100 text-green-800' :
+                                            order.status === 'CANCELLED' ? 'bg-red-100 text-red-800' :
+                                                'bg-yellow-100 text-yellow-800'
+                                            }`}
+                                    >
+                                        <option value="PENDING">Pending</option>
+                                        <option value="PREPARING">Preparing</option>
+                                        <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
+                                        <option value="DELIVERED">Delivered</option>
+                                        <option value="CANCELLED">Cancelled</option>
+                                    </select>
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                    {new Date(order.createdAt).toLocaleDateString()}
+                                </td>
+                                <td className="px-6 py-4 whitespace-nowrap">
+                                    <button
+                                        onClick={() => onDelete(order.id)}
+                                        className="text-red-600 hover:text-red-900"
+                                    >
+                                        <Trash2 size={18} />
+                                    </button>
+                                </td>
+                            </tr>
+                        ))}
+                    </tbody>
+                </table>
+            </div>
+
+            {/* Mobile Card View */}
+            <div className="md:hidden space-y-4">
                 {orders.map((order) => (
-                    <div key={order.id} className="border rounded-lg p-4">
+                    <div key={order.id} className="bg-white border rounded-lg p-4 shadow-sm">
                         <div className="flex justify-between items-start mb-2">
                             <div>
-                                <h3 className="font-semibold">{order.restaurant.name}</h3>
-                                <p className="text-sm text-gray-600">Customer: {order.user.name}</p>
-                                <p className="text-sm text-gray-600">
+                                <h3 className="font-semibold text-gray-900">{order.restaurant?.name || 'Unknown Restaurant'}</h3>
+                                <p className="text-sm text-gray-600">Customer: {order.user?.name || 'Unknown'}</p>
+                                <p className="text-xs text-gray-500 mt-1">
                                     {new Date(order.createdAt).toLocaleString()}
                                 </p>
                             </div>
@@ -504,7 +569,7 @@ const OrdersTab = ({ orders, onDelete, onUpdateStatus }) => {
                                 <select
                                     value={order.status}
                                     onChange={(e) => onUpdateStatus(order.id, e.target.value)}
-                                    className="input-field mt-2 text-sm"
+                                    className="input-field mt-2 text-xs py-1"
                                 >
                                     <option value="PENDING">Pending</option>
                                     <option value="PREPARING">Preparing</option>
@@ -515,21 +580,24 @@ const OrdersTab = ({ orders, onDelete, onUpdateStatus }) => {
                             </div>
                         </div>
                         <div className="border-t pt-2 mt-2">
-                            <p className="text-sm font-medium mb-1">Items:</p>
-                            <ul className="text-sm text-gray-600">
-                                {order.items.map((item, idx) => (
-                                    <li key={idx}>
-                                        {item.quantity}x {item.name} - ₹{(item.price * item.quantity)}
+                            <p className="text-xs font-medium mb-1 text-gray-700">Items:</p>
+                            <ul className="text-xs text-gray-600 space-y-1">
+                                {order.items?.map((item, idx) => (
+                                    <li key={idx} className="flex justify-between">
+                                        <span>{item.quantity}x {item.name}</span>
+                                        <span>₹{(item.price * item.quantity)}</span>
                                     </li>
-                                ))}
+                                )) || <li>No items</li>}
                             </ul>
                         </div>
-                        <button
-                            onClick={() => onDelete(order.id)}
-                            className="mt-2 text-red-600 hover:text-red-900 text-sm"
-                        >
-                            Delete Order
-                        </button>
+                        <div className="flex justify-end mt-3">
+                            <button
+                                onClick={() => onDelete(order.id)}
+                                className="text-red-600 hover:text-red-900 text-sm flex items-center gap-1"
+                            >
+                                <Trash2 size={16} /> Delete
+                            </button>
+                        </div>
                     </div>
                 ))}
             </div>
