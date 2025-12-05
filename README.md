@@ -1,4 +1,4 @@
-# **Full-Stack Project Proposal (Updated as per Instructor Requirements)**  
+# **Full-Stack Project Proposal **  
 ## **Project Title:** FoodiBuddy – Online Food Delivery Platform  
 
 ---
