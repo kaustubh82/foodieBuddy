@@ -3,7 +3,7 @@ generator client {
 }
 
 datasource db {
-  provider = "mongodb"
+  provider = "postgresql"
   url      = env("DATABASE_URL")
 }
 
@@ -22,7 +22,7 @@ enum OrderStatus {
 }
 
 model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  id        String   @id @default(uuid())
   name      String
   email     String   @unique
   password  String?
@@ -33,19 +33,19 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
-  restaurants Restaurant[] // If owner
+  restaurants Restaurant[]
   orders      Order[]
 }
 
 model Restaurant {
-  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  id          String   @id @default(uuid())
   name        String
   description String?
   cuisine     String
   address     String
   rating      Float    @default(0.0)
   imageUrl    String?
-  ownerId     String   @db.ObjectId
+  ownerId     String
   owner       User     @relation(fields: [ownerId], references: [id])
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -55,14 +55,14 @@ model Restaurant {
 }
 
 model MenuItem {
-  id           String   @id @default(auto()) @map("_id") @db.ObjectId
+  id           String   @id @default(uuid())
   name         String
   description  String?
   price        Float
   category     String
   imageUrl     String?
   isAvailable  Boolean  @default(true)
-  restaurantId String   @db.ObjectId
+  restaurantId String
   restaurant   Restaurant @relation(fields: [restaurantId], references: [id])
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
@@ -71,10 +71,10 @@ model MenuItem {
 }
 
 model Order {
-  id           String      @id @default(auto()) @map("_id") @db.ObjectId
-  userId       String      @db.ObjectId
+  id           String      @id @default(uuid())
+  userId       String
   user         User        @relation(fields: [userId], references: [id])
-  restaurantId String      @db.ObjectId
+  restaurantId String
   restaurant   Restaurant  @relation(fields: [restaurantId], references: [id])
   status       OrderStatus @default(PENDING)
   totalAmount  Float
@@ -84,8 +84,14 @@ model Order {
   items OrderItem[]
 }
 
-type OrderItem {
-  menuItemId String   @db.ObjectId
+model OrderItem {
+  id         String   @id @default(uuid())
+  orderId    String
+  order      Order    @relation(fields: [orderId], references: [id])
+  
+  menuItemId String
+  menuItem   MenuItem @relation(fields: [menuItemId], references: [id])
+  
   name       String
   quantity   Int
   price      Float
